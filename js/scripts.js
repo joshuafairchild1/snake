@@ -5,16 +5,13 @@ const canvas = document.getElementById('snake-area');
 const c = canvas.getContext('2d');
 const h = canvas.height;
 const w = canvas.width;
-const frameRate = 500;
+const frameRate = 400;
 const keys = {
             37 : 'left',
             38 : 'up',
             39 : 'right',
             40 : 'down'
             };
-
-let xPos = 10;
-let yPos = 10;
 
 
 //------------------------------------------------------------------------------
@@ -30,27 +27,19 @@ function drawSquare(x,y) {
 //----------move snake one unit-------------------------------------------------
 //------------------------------------------------------------------------------
 function moveSnake(direction, oldX, oldY) {
-  let newX = oldX;
-  let newY = oldY;
+  var newX = oldX;
+  var newY = oldY;
   c.clearRect(0,0,h,w);
   if (direction === 'right') {
-    newX = oldX += 10;
+    newX = oldX + 10;
   } else if (direction === 'left') {
-    newX = oldX -= 10;
+    newX = oldX - 10;
   } else if (direction === 'up') {
-    newY = oldY -=10;
+    newY = oldY - 10;
   } else if (direction === 'down') {
-    newY = oldY +=10;
+    newY = oldY + 10;
   }
   drawSquare(newX, newY);
-}
-
-
-//------------------------------------------------------------------------------
-//----------listen for keydown--------------------------------------------------
-//------------------------------------------------------------------------------
-function handleKeyPress() {
-
 }
 
 
@@ -63,8 +52,41 @@ function game() {
   let score = 0;
   let snake = [];
   let gameOver = false;
-  xPos += 10;
-  moveSnake(direction, xPos, yPos);
+  let lastX = 240;
+  let lastY = 240;
+
+
+  //----------------------------------------------------------------------------
+  //----------listen for keydown------------------------------------------------
+  //----------------------------------------------------------------------------
+  window.addEventListener('keydown', function(e) {
+    let clickedKey = e.keyCode;
+    let isArrowKey = Object.keys(keys).includes(String(clickedKey));
+
+    if (isArrowKey) {
+      let keyDirection = keys[String(clickedKey)];
+      direction = keyDirection;
+      e.preventDefault();
+    }
+    console.log(direction);
+  });
+
+
+  //----------------------------------------------------------------------------
+  //-----------loop every 0.4sec------------------------------------------------
+  //----------------------------------------------------------------------------
+  setInterval(function() {
+    moveSnake(direction, lastX, lastY);
+    if (direction === 'right') {
+      lastX += 10;
+    } else if (direction === 'left') {
+      lastX -= 10;
+    } else if (direction === 'up') {
+      lastY -= 10;
+    } else if (direction === 'down') {
+      lastY += 10;
+    }
+  }, frameRate)
 
 }
 
@@ -74,7 +96,5 @@ function game() {
 //----------user interface logic------------------------------------------------
 //------------------------------------------------------------------------------
 $(function() {
-  setInterval(function() {
-    game();
-  }, frameRate);
+  game();
 });
