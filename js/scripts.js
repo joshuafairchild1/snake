@@ -1,129 +1,115 @@
-//------------------------------------------------------------------------------
-//----------init globals--------------------------------------------------------
-//------------------------------------------------------------------------------
 const canvas = document.getElementById('snake-area');
 const c = canvas.getContext('2d');
 const h = canvas.height;
 const w = canvas.width;
 const frameRate = 500;
 const keys = {
-            37 : 'left',
-            38 : 'up',
-            39 : 'right',
-            40 : 'down'
-            };
+  37 : 'left',
+  38 : 'up',
+  39 : 'right',
+  40 : 'down'
+};
+
+const snake = new Snake();
+const square = new Square(c);
 
 
-//------------------------------------------------------------------------------
-//----------draw 10x10 square at these coords-----------------------------------
-//------------------------------------------------------------------------------
-function drawSquare(x,y) {
-  c.fillStyle = 'black';
-  c.fillRect(x,y,10,10);
+function Snake() {
+  this.direction = 'right';
+  this.body = [];
 }
 
 //------------------------------------------------------------------------------
-//----------insert a food square------------------------------------------------
+//----------add 5 units to the body---------------------------------------------
 //------------------------------------------------------------------------------
-function makeFood() {
-  let randomSpot = Math.floor(Math.random()*(490-10+1)+10);
-  let posX = Math.ceil((randomSpot+1) / 10) * 10;
-  let posY = Math.ceil((randomSpot+1) / 10) * 10;
-  // drawSquare(posX,posY);
-  return [posX, posY];
+Snake.prototype.init = function(sq) {
+  for (let i = 0; i < 5; i++) {
+    sq.draw(240 - (10*i), 240);
+    this.body.push([240 - (10*i), 240]);
+  }
 }
 
+
 //------------------------------------------------------------------------------
-//----------move snake one unit-------------------------------------------------
+//----------Snake.body.length++ ------------------------------------------------
 //------------------------------------------------------------------------------
-function moveSnake(direction, oldX, oldY, foodPos) {
-  let newX = oldX;
-  let newY = oldY;
+Snake.prototype.grow = function(sq) {
+  //stuff
+}
+
+
+//------------------------------------------------------------------------------
+//----------move the snake a single unit----------------------------------------
+//------------------------------------------------------------------------------
+Snake.prototype.move = function(sq) {
+  let dir = this.direction;
+  let nextSpot;
+  if (dir === 'right') {
+    nextSpot = [(this.body[0][0])+10,this.body[0][1]];
+  } else if (dir === 'left') {
+    nextSpot = [(this.body[0][0])-10,this.body[0][1]];
+  } else if (dir === 'up') {
+    nextSpot = [this.body[0][0],(this.body[0][1]-10)];
+  } else if (dir === 'down') {
+    nextSpot = [this.body[0][0],(this.body[0][1]+10)];
+  }
+
+  for (let i = this.body.length - 1; i > 0; i--) {
+    this.body[i] = this.body[(i-1)];
+  }
+
+  this.body[0] = nextSpot;
+  console.log(dir);
   c.clearRect(0,0,h,w);
-  if (direction === 'right') {
-    newX = oldX + 10;
-  } else if (direction === 'left') {
-    newX = oldX - 10;
-  } else if (direction === 'up') {
-    newY = oldY - 10;
-  } else if (direction === 'down') {
-    newY = oldY + 10;
+  for(let j = 0; j < this.body.length; j++) {
+    sq.draw(this.body[j][0],this.body[j][1]);
   }
-  drawSquare(newX, newY);
-  drawSquare(foodPos[0],foodPos[1]);
-  grow(newX,newY,direction)
-}
-
-function grow(fromX, fromY, direction) {
-  let growAtX = fromX;
-  let growAtY = fromY;
-  if (direction === 'right') {
-    growAtX = fromX - 10;
-  } else if (direction === 'left') {
-    growAtX = fromX + 10;
-  } else if (direction === 'up') {
-    growAtY = fromY + 10;
-  } else if (direction === 'down') {
-    growAtY = fromY - 10;
-  }
-  drawSquare(growAtX,growAtY)
+  // this.move(sq)
 }
 
 
 //------------------------------------------------------------------------------
-//----------start the game------------------------------------------------------
+//----------insert squares by using Square.draw()-------------------------------
 //------------------------------------------------------------------------------
-function game() {
+function Square(context) {
+  this.context = context;
+  this.width = 10;
+  this.height = 10;
+}
+Square.prototype.draw = function(x,y) {
+  this.context.fillStyle = 'black';
+  this.context.fillRect(x,y,10,10);
+}
 
-  let direction = 'right';
-  let score = 0;
-  let snake = [];
-  let gameOver = false;
-  let lastX = 240;
-  let lastY = 240;
-  let foodCoords = makeFood();
 
-  //----------------------------------------------------------------------------
-  //----------listen for keydown------------------------------------------------
-  //----------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+//----------update Snake.direction on keydown-----------------------------------
+//------------------------------------------------------------------------------
+function getDirection(snake) {
   window.addEventListener('keydown', function(e) {
     let clickedKey = e.keyCode;
-    let isArrowKey = Object.keys(keys).includes(String(clickedKey));
+    let keyDirection = keys[String(clickedKey)];
+    snake.direction = keyDirection;
 
-    if (isArrowKey) {
-      let keyDirection = keys[String(clickedKey)];
-      direction = keyDirection;
-      e.preventDefault();
-    }
-    console.log(direction);
+    // e.preventDefault();
   });
-
-  //----------------------------------------------------------------------------
-  //-----------loop every 0.4sec------------------------------------------------
-  //----------------------------------------------------------------------------
-  setInterval(function() {
-    // canvas.addEventListener('mousedown', function() {
-    //   grow(lastX,lastY,direction);
-    // })
-    moveSnake(direction, lastX, lastY, foodCoords);
-    if (direction === 'right') {
-      lastX += 10;
-    } else if (direction === 'left') {
-      lastX -= 10;
-    } else if (direction === 'up') {
-      lastY -= 10;
-    } else if (direction === 'down') {
-      lastY += 10;
-    }
-  }, frameRate)
-
 }
 
 
+//------------------------------------------------------------------------------
+//----------structure the flow of the game--------------------------------------
+//------------------------------------------------------------------------------
+function game() {
+  snake.init(square);
+  getDirection(snake);
+
+  setInterval(function() {
+    snake.move(square);
+  }, frameRate)
+}
+
 
 //------------------------------------------------------------------------------
-//----------user interface logic------------------------------------------------
+//----------start a new game----------------------------------------------------
 //------------------------------------------------------------------------------
-$(function() {
-  game();
-});
+game();
