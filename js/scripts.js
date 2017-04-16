@@ -5,7 +5,7 @@ const canvas = document.getElementById('snake-area');
 const c = canvas.getContext('2d');
 const h = canvas.height;
 const w = canvas.width;
-const frameRate = 100;
+const frameRate = 500;
 const keys = {
             37 : 'left',
             38 : 'up',
@@ -22,6 +22,16 @@ function drawSquare(x,y) {
   c.fillRect(x,y,10,10);
 }
 
+//------------------------------------------------------------------------------
+//----------insert a food square------------------------------------------------
+//------------------------------------------------------------------------------
+function makeFood() {
+  let randomSpot = Math.floor(Math.random()*(490-10+1)+10);
+  let posX = Math.ceil((randomSpot+1) / 10) * 10;
+  let posY = Math.ceil((randomSpot+1) / 10) * 10;
+  // drawSquare(posX,posY);
+  return [posX, posY];
+}
 
 //------------------------------------------------------------------------------
 //----------move snake one unit-------------------------------------------------
@@ -41,19 +51,24 @@ function moveSnake(direction, oldX, oldY, foodPos) {
   }
   drawSquare(newX, newY);
   drawSquare(foodPos[0],foodPos[1]);
+  grow(newX,newY,direction)
 }
 
-
-//------------------------------------------------------------------------------
-//----------insert a food square------------------------------------------------
-//------------------------------------------------------------------------------
-var makeFood = function() {
-  let randomSpot = Math.floor(Math.random()*(490-10+1)+10);
-  let posX = Math.ceil((randomSpot+1) / 10) * 10;
-  let posY = Math.ceil((randomSpot+1) / 10) * 10;
-  // drawSquare(posX,posY);
-  return [posX, posY];
+function grow(fromX, fromY, direction) {
+  let growAtX = fromX;
+  let growAtY = fromY;
+  if (direction === 'right') {
+    growAtX = fromX - 10;
+  } else if (direction === 'left') {
+    growAtX = fromX + 10;
+  } else if (direction === 'up') {
+    growAtY = fromY + 10;
+  } else if (direction === 'down') {
+    growAtY = fromY - 10;
+  }
+  drawSquare(growAtX,growAtY)
 }
+
 
 //------------------------------------------------------------------------------
 //----------start the game------------------------------------------------------
@@ -64,8 +79,8 @@ function game() {
   let score = 0;
   let snake = [];
   let gameOver = false;
-  let lastX = 10;
-  let lastY = 10;
+  let lastX = 240;
+  let lastY = 240;
   let foodCoords = makeFood();
 
   //----------------------------------------------------------------------------
@@ -80,13 +95,16 @@ function game() {
       direction = keyDirection;
       e.preventDefault();
     }
+    console.log(direction);
   });
-
 
   //----------------------------------------------------------------------------
   //-----------loop every 0.4sec------------------------------------------------
   //----------------------------------------------------------------------------
   setInterval(function() {
+    // canvas.addEventListener('mousedown', function() {
+    //   grow(lastX,lastY,direction);
+    // })
     moveSnake(direction, lastX, lastY, foodCoords);
     if (direction === 'right') {
       lastX += 10;
