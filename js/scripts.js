@@ -5,7 +5,7 @@ const canvas = document.getElementById('snake-area');
 const c = canvas.getContext('2d');
 const h = canvas.height;
 const w = canvas.width;
-const frameRate = 400;
+const frameRate = 100;
 const keys = {
             37 : 'left',
             38 : 'up',
@@ -26,9 +26,9 @@ function drawSquare(x,y) {
 //------------------------------------------------------------------------------
 //----------move snake one unit-------------------------------------------------
 //------------------------------------------------------------------------------
-function moveSnake(direction, oldX, oldY) {
-  var newX = oldX;
-  var newY = oldY;
+function moveSnake(direction, oldX, oldY, foodPos) {
+  let newX = oldX;
+  let newY = oldY;
   c.clearRect(0,0,h,w);
   if (direction === 'right') {
     newX = oldX + 10;
@@ -40,8 +40,20 @@ function moveSnake(direction, oldX, oldY) {
     newY = oldY + 10;
   }
   drawSquare(newX, newY);
+  drawSquare(foodPos[0],foodPos[1]);
 }
 
+
+//------------------------------------------------------------------------------
+//----------insert a food square------------------------------------------------
+//------------------------------------------------------------------------------
+var makeFood = function() {
+  let randomSpot = Math.floor(Math.random()*(490-10+1)+10);
+  let posX = Math.ceil((randomSpot+1) / 10) * 10;
+  let posY = Math.ceil((randomSpot+1) / 10) * 10;
+  // drawSquare(posX,posY);
+  return [posX, posY];
+}
 
 //------------------------------------------------------------------------------
 //----------start the game------------------------------------------------------
@@ -52,9 +64,9 @@ function game() {
   let score = 0;
   let snake = [];
   let gameOver = false;
-  let lastX = 240;
-  let lastY = 240;
-
+  let lastX = 10;
+  let lastY = 10;
+  let foodCoords = makeFood();
 
   //----------------------------------------------------------------------------
   //----------listen for keydown------------------------------------------------
@@ -68,7 +80,6 @@ function game() {
       direction = keyDirection;
       e.preventDefault();
     }
-    console.log(direction);
   });
 
 
@@ -76,7 +87,7 @@ function game() {
   //-----------loop every 0.4sec------------------------------------------------
   //----------------------------------------------------------------------------
   setInterval(function() {
-    moveSnake(direction, lastX, lastY);
+    moveSnake(direction, lastX, lastY, foodCoords);
     if (direction === 'right') {
       lastX += 10;
     } else if (direction === 'left') {
