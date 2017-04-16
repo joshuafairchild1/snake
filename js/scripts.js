@@ -2,7 +2,13 @@ const canvas = document.getElementById('snake-area');
 const c = canvas.getContext('2d');
 const h = canvas.height;
 const w = canvas.width;
-const frameRate = 500;
+const frameRate = 200;
+const opposites = {
+  right : 'left',
+  down : 'up',
+  left : 'right',
+  up : 'down'
+};
 const keys = {
   37 : 'left',
   38 : 'up',
@@ -86,12 +92,15 @@ Square.prototype.draw = function(x,y) {
 //----------update Snake.direction on keydown-----------------------------------
 //------------------------------------------------------------------------------
 function getDirection(snake) {
-  window.addEventListener('keydown', function(e) {
+  window.addEventListener('keydown', e => {
     let clickedKey = e.keyCode;
-    let keyDirection = keys[String(clickedKey)];
-    snake.direction = keyDirection;
+    let isArrowKey = Object.keys(keys).includes(String(clickedKey));
 
-    // e.preventDefault();
+    if (isArrowKey) {
+      e.preventDefault();
+      let keyDirection = keys[clickedKey];
+      snake.direction = keyDirection;
+    }
   });
 }
 
