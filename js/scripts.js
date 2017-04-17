@@ -16,8 +16,10 @@ const keys = {
   40 : 'down'
 };
 
+
 const snake = new Snake();
 const square = new Square(c);
+let dir;
 
 
 function Snake() {
@@ -26,7 +28,7 @@ function Snake() {
 }
 
 //------------------------------------------------------------------------------
-//----------add 5 units to the body---------------------------------------------
+//----------add 5 segments to the body------------------------------------------
 //------------------------------------------------------------------------------
 Snake.prototype.init = function(sq) {
   for (let i = 0; i < 5; i++) {
@@ -37,19 +39,44 @@ Snake.prototype.init = function(sq) {
 
 
 //------------------------------------------------------------------------------
-//----------Snake.body.length++ ------------------------------------------------
+//----------add segment to end of body------------------------------------------
 //------------------------------------------------------------------------------
 Snake.prototype.grow = function(sq) {
-  //stuff
-}
+  let bod = this.body;
+  let prevLastSquare = bod[bod.length - 2];
+  let lastSquare = bod[bod.length - 1];
+  let newSquare;
+  dir = this.direction;
 
+  //mksqr to the left
+  if (lastSquare[1] === prevLastSquare[1] && lastSquare[0] > prevLastSquare[0]) {
+    newSquare = [lastSquare[0] - 10, lastSquare[1]];
+
+  //mksqr to the right
+  } else if (lastSquare[1] === prevLastSquare[1] && lastSquare[0] < prevLastSquare[0]) {
+    newSquare = [lastSquare[0] + 10, lastSquare[1]];
+
+  //mksqr going down
+  } else if (lastSquare[0] === prevLastSquare[0] && lastSquare[1] > prevLastSquare[1]) {
+    newSquare = [lastSquare[0], lastSquare[1] + 10];
+
+  //mksqr going up
+} else if (lastSquare[0] === prevLastSquare[0] && lastSquare[1] < prevLastSquare[1]) {
+    newSquare = [lastSquare[0], lastSquare[1] - 10];
+  }
+
+  this.body.push(newSquare);
+  for(let i = 0; i < this.body.length; i++) {
+    sq.draw(this.body[i][0],this.body[i][1]);
+  }
+}
 
 //------------------------------------------------------------------------------
 //----------move the snake a single unit----------------------------------------
 //------------------------------------------------------------------------------
 Snake.prototype.move = function(sq) {
-  let dir = this.direction;
   let nextSpot;
+  dir = this.direction;
   if (dir === 'right') {
     nextSpot = [(this.body[0][0])+10,this.body[0][1]];
   } else if (dir === 'left') {
@@ -73,14 +100,13 @@ Snake.prototype.move = function(sq) {
 }
 
 
-//------------------------------------------------------------------------------
-//----------insert squares by using Square.draw()-------------------------------
-//------------------------------------------------------------------------------
+//--------storing the template for a square inside of an object-----------------
 function Square(context) {
   this.context = context;
   this.width = 10;
   this.height = 10;
 }
+//--------draw a Square---------------------------------------------------------
 Square.prototype.draw = function(x,y) {
   this.context.fillStyle = 'black';
   this.context.fillRect(x,y,10,10);
@@ -108,14 +134,19 @@ function getDirection(snake) {
 
 
 //------------------------------------------------------------------------------
-//----------structure the flow of the game--------------------------------------
+//----------fn to init and begin running the game-------------------------------
 //------------------------------------------------------------------------------
 function game() {
-  snake.init(square);
   getDirection(snake);
+  snake.init(square);
+
+  setInterval(function() {
+    snake.grow(square);
+  },1500);
 
   setInterval(function() {
     snake.move(square);
+    // debugger;
   }, frameRate)
 }
 
