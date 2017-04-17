@@ -2,10 +2,9 @@ const canvas = document.getElementById('snake-area');
 const c = canvas.getContext('2d');
 const h = canvas.height;
 const w = canvas.width;
-const frameRate = 200;
+const frameRate = 100;
 const snake = new Snake();
 const square = new Square(c);
-// const reload = location.reload();
 
 const opposites =
 {
@@ -27,7 +26,6 @@ let dir;
 let head;
 
 
-
                       /*-------------------------------
                       -----Snake object and protos-----
                       -------------------------------*/
@@ -38,9 +36,9 @@ function Snake() {
 }
 
 
-//----------add 5 segments to the body------------------------------------------
+//----------add 8 segments to the body------------------------------------------
 Snake.prototype.init = function(sq) {
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 8; i++) {
     sq.draw(240 - (10*i), 240);
     this.body.push([240 - (10*i), 240]);
   }
@@ -98,12 +96,14 @@ Snake.prototype.move = function(sq, food) {
 
   //kill the snake if necessary
   //check for contact wall
-  if (nextSpot[0] < 10 || nextSpot[0] > 490 || nextSpot[1] < 10 || nextSpot[1] > 490) {
+  if (nextSpot[0] <= 0 || nextSpot[0] >= 500 || nextSpot[1] <= 10 || nextSpot[1] >= 500) {
+    // debugger;
     die();
   }
   //check for contact self
   for (let k = 0; k < this.body.length; k++) {
     if (nextSpot[0] === this.body[k][0] && nextSpot[1] === this.body[k][1]) {
+      // debugger;
       die();
     }
   }
@@ -121,7 +121,6 @@ Snake.prototype.move = function(sq, food) {
     sq.draw(this.body[j][0],this.body[j][1]);
   }
   sq.draw(food[0],food[1]);
-
 }
 
 
@@ -150,8 +149,11 @@ function Square(context) {
 
 //--------draw a Square---------------------------------------------------------
 Square.prototype.draw = function(x,y) {
-  this.context.fillStyle = 'black';
+  this.context.fillStyle = 'white';
+  this.context.strokeStyle = "black";
+  this.context.lineWidth = 2;
   this.context.fillRect(x,y,10,10);
+  this.context.strokeRect(x, y, w, h);
 }
 
 
