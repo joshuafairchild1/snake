@@ -96,7 +96,7 @@ Snake.prototype.move = function(sq, food) {
 
   //kill the snake if necessary
   //check for contact wall
-  if (nextSpot[0] <= 0 || nextSpot[0] >= 500 || nextSpot[1] <= 10 || nextSpot[1] >= 500) {
+  if (nextSpot[0] <= -10 || nextSpot[0] >= 500 || nextSpot[1] <= -10 || nextSpot[1] >= 500) {
     // debugger;
     die();
   }
@@ -149,11 +149,11 @@ function Square(context) {
 
 //--------draw a Square---------------------------------------------------------
 Square.prototype.draw = function(x,y) {
-  this.context.fillStyle = 'white';
-  this.context.strokeStyle = "black";
+  this.context.fillStyle = 'black';
   this.context.lineWidth = 2;
+  this.context.strokeStyle = "white";
   this.context.fillRect(x,y,10,10);
-  this.context.strokeRect(x, y, w, h);
+  this.context.strokeRect(x, y, 10, 10);
 }
 
 
