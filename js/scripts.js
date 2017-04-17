@@ -21,13 +21,13 @@ const keys =
   39 : 'right',
   40 : 'down'
 };
-let newFood = spawnFood(square);
+let newFood = [100,100];
 let dir;
 let head;
 
 
                       /*-------------------------------
-                      -----Snake object and protos-----
+                   --------Snake object and protos--------
                       -------------------------------*/
 
 function Snake() {
@@ -117,6 +117,8 @@ Snake.prototype.move = function(sq, food) {
 
   //draw the new snake and the current food
   c.clearRect(0,0,h,w);
+  // c.fillStyle='black';
+  // c.fillRect(0,0,h,w);
   for (let j = 0; j < this.body.length; j++) {
     sq.draw(this.body[j][0],this.body[j][1]);
   }
@@ -130,14 +132,21 @@ Snake.prototype.consumeFood = function(sq, food) {
   if (head[0] === food[0] && head[1] === food[1]) {
     this.grow(sq, food);
     newFood = spawnFood(sq);
+
+    for (let i = 0; i < this.body.length; i++) {
+      if (newFood[0] === this.body[i][0] && newFood[1] === this.body[i][1]) {
+        debugger;
+        newFood = spawnFood(sq);
+      }
+    }
   }
 }
 
 
 
-                    /*------------------------------
-                    -----Square object & protos-----
-                    ------------------------------*/
+                      /*------------------------------
+                   --------Square object & protos--------
+                      ------------------------------*/
 
 //--------store the template for a square inside of an object constructor-------
 function Square(context) {
@@ -158,9 +167,9 @@ Square.prototype.draw = function(x,y) {
 
 
 
-                    /*-----------------
-                    -----Functions-----
-                    -----------------*/
+                      /*-----------------
+                   --------Functions--------
+                      -----------------*/
 
 //----------update Snake.direction on keydown-----------------------------------
 function getDirection(snake) {
@@ -182,11 +191,12 @@ function getDirection(snake) {
 
 //----------draw a square at a random x,y pos-----------------------------------
 function spawnFood(sq) {
-  let randomSpot = Math.floor(Math.random()*(490-10+1)+10);
+  let randomSpot = Math.floor(Math.random()*(490-20+1)+10);
   let posX = Math.ceil((randomSpot+1) / 10) * 10;
   let posY = Math.ceil((randomSpot+1) / 10) * 10;
   return [posX,posY];
   sq.draw(posX,posY);
+  console.log([posX,posY]);
 }
 
 
@@ -210,9 +220,22 @@ function game() {
 
 
 
-                    /*-----------------
-                    -----UI maybe?-----
-                    -----------------*/
+                      /*-----------------
+                   --------UI maybe?--------
+                      -----------------*/
 
 //----------start a new game----------------------------------------------------
 game();
+
+
+
+
+
+
+//------------------------------------------------------------------------------
+//----------OBJECTIVES----------------------------------------------------------
+//------------------------------------------------------------------------------
+// 1. count and display the score
+// 2. option to swap black and white (looks nice both ways)
+// 3. make it so you can't suicide the snake by arrowing too quick
+// 4. make it pretty
