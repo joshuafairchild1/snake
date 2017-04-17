@@ -21,10 +21,14 @@ const keys =
   39 : 'right',
   40 : 'down'
 };
+let newFood = spawnFood(square);
 let dir;
 
 
 
+                      /*-------------------------------
+                      -----Snake object and protos-----
+                      -------------------------------*/
 
 function Snake() {
   this.direction = 'right';
@@ -32,9 +36,7 @@ function Snake() {
 }
 
 
-//------------------------------------------------------------------------------
 //----------add 5 segments to the body------------------------------------------
-//------------------------------------------------------------------------------
 Snake.prototype.init = function(sq) {
   for (let i = 0; i < 5; i++) {
     sq.draw(240 - (10*i), 240);
@@ -43,9 +45,7 @@ Snake.prototype.init = function(sq) {
 }
 
 
-//------------------------------------------------------------------------------
 //----------add segment to end of body------------------------------------------
-//------------------------------------------------------------------------------
 Snake.prototype.grow = function(sq, food) {
   let bod = this.body;
   let prevLastSquare = bod[bod.length - 2];
@@ -78,9 +78,7 @@ Snake.prototype.grow = function(sq, food) {
 }
 
 
-//------------------------------------------------------------------------------
 //----------move the snake a single unit----------------------------------------
-//------------------------------------------------------------------------------
 Snake.prototype.move = function(sq, food) {
   let nextSpot;
   dir = this.direction;
@@ -108,12 +106,29 @@ Snake.prototype.move = function(sq, food) {
 }
 
 
-//--------storing the template for a square inside of an object-----------------
+//----------recognize & handle the snake eating food----------------------------
+Snake.prototype.consumeFood = function(sq, food) {
+  let head = [this.body[0][0],this.body[0][1]];
+  if (head[0] === food[0] && head[1] === food[1]) {
+    this.grow(sq, food);
+    newFood = spawnFood(sq);
+  }
+}
+
+
+
+                    /*------------------------------
+                    -----Square object & protos-----
+                    ------------------------------*/
+
+//--------store the template for a square inside of an object constructor-------
 function Square(context) {
   this.context = context;
   this.width = 10;
   this.height = 10;
 }
+
+
 //--------draw a Square---------------------------------------------------------
 Square.prototype.draw = function(x,y) {
   this.context.fillStyle = 'black';
@@ -122,10 +137,11 @@ Square.prototype.draw = function(x,y) {
 
 
 
+                    /*-----------------
+                    -----Functions-----
+                    -----------------*/
 
-//------------------------------------------------------------------------------
 //----------update Snake.direction on keydown-----------------------------------
-//------------------------------------------------------------------------------
 function getDirection(snake) {
   window.addEventListener('keydown', e => {
     let lastDir = snake.direction;
@@ -143,6 +159,7 @@ function getDirection(snake) {
 }
 
 
+//----------draw a square at a random x,y pos-----------------------------------
 function spawnFood(sq) {
   let randomSpot = Math.floor(Math.random()*(490-10+1)+10);
   let posX = Math.ceil((randomSpot+1) / 10) * 10;
@@ -152,26 +169,23 @@ function spawnFood(sq) {
 }
 
 
-//------------------------------------------------------------------------------
 //----------fn to init and begin running the game-------------------------------
-//------------------------------------------------------------------------------
 function game() {
-  let newFood = spawnFood(square);
   getDirection(snake);
   snake.init(square);
 
   setInterval(function() {
-    // snake.grow(square, newFood);
-  },1500);
-
-  setInterval(function() {
     snake.move(square, newFood);
+    snake.consumeFood(square, newFood);
     // debugger;
   }, frameRate)
 }
 
 
-//------------------------------------------------------------------------------
+
+                    /*-----------------
+                    -----UI maybe?-----
+                    -----------------*/
+
 //----------start a new game----------------------------------------------------
-//------------------------------------------------------------------------------
 game();
