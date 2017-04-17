@@ -5,6 +5,7 @@ const w = canvas.width;
 const frameRate = 200;
 const snake = new Snake();
 const square = new Square(c);
+// const reload = location.reload();
 
 const opposites =
 {
@@ -23,6 +24,7 @@ const keys =
 };
 let newFood = spawnFood(square);
 let dir;
+let head;
 
 
 
@@ -82,6 +84,8 @@ Snake.prototype.grow = function(sq, food) {
 Snake.prototype.move = function(sq, food) {
   let nextSpot;
   dir = this.direction;
+
+  //based off the direction, determine the coords of what the next spot is to be
   if (dir === 'right') {
     nextSpot = [(this.body[0][0])+10,this.body[0][1]];
   } else if (dir === 'left') {
@@ -92,23 +96,38 @@ Snake.prototype.move = function(sq, food) {
     nextSpot = [this.body[0][0],(this.body[0][1]+10)];
   }
 
+  //kill the snake if necessary
+  //check for contact wall
+  if (nextSpot[0] < 10 || nextSpot[0] > 490 || nextSpot[1] < 10 || nextSpot[1] > 490) {
+    die();
+  }
+  //check for contact self
+  for (let k = 0; k < this.body.length; k++) {
+    if (nextSpot[0] === this.body[k][0] && nextSpot[1] === this.body[k][1]) {
+      die();
+    }
+  }
+
+  //move all of the squares forward by one space
   for (let i = this.body.length - 1; i > 0; i--) {
     this.body[i] = this.body[(i-1)];
   }
-
   this.body[0] = nextSpot;
   console.log(dir);
+
+  //draw the new snake and the current food
   c.clearRect(0,0,h,w);
-  for(let j = 0; j < this.body.length; j++) {
+  for (let j = 0; j < this.body.length; j++) {
     sq.draw(this.body[j][0],this.body[j][1]);
   }
   sq.draw(food[0],food[1]);
+
 }
 
 
 //----------recognize & handle the snake eating food----------------------------
 Snake.prototype.consumeFood = function(sq, food) {
-  let head = [this.body[0][0],this.body[0][1]];
+  head = [this.body[0][0],this.body[0][1]];
   if (head[0] === food[0] && head[1] === food[1]) {
     this.grow(sq, food);
     newFood = spawnFood(sq);
@@ -166,6 +185,12 @@ function spawnFood(sq) {
   let posY = Math.ceil((randomSpot+1) / 10) * 10;
   return [posX,posY];
   sq.draw(posX,posY);
+}
+
+
+//----------fn to call when the snake hits an invalid spot----------------------
+function die() {
+  location.reload();
 }
 
 
