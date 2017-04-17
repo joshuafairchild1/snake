@@ -3,29 +3,34 @@ const c = canvas.getContext('2d');
 const h = canvas.height;
 const w = canvas.width;
 const frameRate = 200;
-const opposites = {
+const snake = new Snake();
+const square = new Square(c);
+
+const opposites =
+{
   right : 'left',
   down : 'up',
   left : 'right',
   up : 'down'
 };
-const keys = {
+
+const keys =
+{
   37 : 'left',
   38 : 'up',
   39 : 'right',
   40 : 'down'
 };
-
-
-const snake = new Snake();
-const square = new Square(c);
 let dir;
+
+
 
 
 function Snake() {
   this.direction = 'right';
   this.body = [];
 }
+
 
 //------------------------------------------------------------------------------
 //----------add 5 segments to the body------------------------------------------
@@ -41,7 +46,7 @@ Snake.prototype.init = function(sq) {
 //------------------------------------------------------------------------------
 //----------add segment to end of body------------------------------------------
 //------------------------------------------------------------------------------
-Snake.prototype.grow = function(sq) {
+Snake.prototype.grow = function(sq, food) {
   let bod = this.body;
   let prevLastSquare = bod[bod.length - 2];
   let lastSquare = bod[bod.length - 1];
@@ -61,7 +66,7 @@ Snake.prototype.grow = function(sq) {
     newSquare = [lastSquare[0], lastSquare[1] + 10];
 
   //mksqr going up
-} else if (lastSquare[0] === prevLastSquare[0] && lastSquare[1] < prevLastSquare[1]) {
+  } else if (lastSquare[0] === prevLastSquare[0] && lastSquare[1] < prevLastSquare[1]) {
     newSquare = [lastSquare[0], lastSquare[1] - 10];
   }
 
@@ -69,12 +74,14 @@ Snake.prototype.grow = function(sq) {
   for(let i = 0; i < this.body.length; i++) {
     sq.draw(this.body[i][0],this.body[i][1]);
   }
+  sq.draw(food[0], food[1])
 }
+
 
 //------------------------------------------------------------------------------
 //----------move the snake a single unit----------------------------------------
 //------------------------------------------------------------------------------
-Snake.prototype.move = function(sq) {
+Snake.prototype.move = function(sq, food) {
   let nextSpot;
   dir = this.direction;
   if (dir === 'right') {
@@ -97,6 +104,7 @@ Snake.prototype.move = function(sq) {
   for(let j = 0; j < this.body.length; j++) {
     sq.draw(this.body[j][0],this.body[j][1]);
   }
+  sq.draw(food[0],food[1]);
 }
 
 
@@ -111,6 +119,8 @@ Square.prototype.draw = function(x,y) {
   this.context.fillStyle = 'black';
   this.context.fillRect(x,y,10,10);
 }
+
+
 
 
 //------------------------------------------------------------------------------
@@ -133,19 +143,29 @@ function getDirection(snake) {
 }
 
 
+function spawnFood(sq) {
+  let randomSpot = Math.floor(Math.random()*(490-10+1)+10);
+  let posX = Math.ceil((randomSpot+1) / 10) * 10;
+  let posY = Math.ceil((randomSpot+1) / 10) * 10;
+  return [posX,posY];
+  sq.draw(posX,posY);
+}
+
+
 //------------------------------------------------------------------------------
 //----------fn to init and begin running the game-------------------------------
 //------------------------------------------------------------------------------
 function game() {
+  let newFood = spawnFood(square);
   getDirection(snake);
   snake.init(square);
 
   setInterval(function() {
-    snake.grow(square);
+    // snake.grow(square, newFood);
   },1500);
 
   setInterval(function() {
-    snake.move(square);
+    snake.move(square, newFood);
     // debugger;
   }, frameRate)
 }
