@@ -70,7 +70,6 @@ Snake.prototype.move = function(sq) {
   for(let j = 0; j < this.body.length; j++) {
     sq.draw(this.body[j][0],this.body[j][1]);
   }
-  // this.move(sq)
 }
 
 
@@ -93,13 +92,16 @@ Square.prototype.draw = function(x,y) {
 //------------------------------------------------------------------------------
 function getDirection(snake) {
   window.addEventListener('keydown', e => {
+    let lastDir = snake.direction;
     let clickedKey = e.keyCode;
     let isArrowKey = Object.keys(keys).includes(String(clickedKey));
 
     if (isArrowKey) {
       e.preventDefault();
       let keyDirection = keys[clickedKey];
-      snake.direction = keyDirection;
+      if (keyDirection !== opposites[lastDir]) {
+        snake.direction = keyDirection;
+      }
     }
   });
 }
