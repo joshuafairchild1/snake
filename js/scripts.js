@@ -2,25 +2,22 @@ const canvas = document.getElementById('snake-area');
 const c = canvas.getContext('2d');
 const h = canvas.height;
 const w = canvas.width;
-const frameRate = 100;
-const snake = new Snake();
+const frameRate = 85;
+const directions = ['right','left','up','down'];
+const snake = new Snake(directions);
 const square = new Square(c);
-
-const opposites =
-{
-  right : 'left',
-  down : 'up',
-  left : 'right',
-  up : 'down'
-};
-
-const keys =
-{
-  37 : 'left',
-  38 : 'up',
-  39 : 'right',
-  40 : 'down'
-};
+const opposites = {
+                    right : 'left',
+                    down : 'up',
+                    left : 'right',
+                    up : 'down'
+                  };
+const keys ={
+              37 : 'left',
+              38 : 'up',
+              39 : 'right',
+              40 : 'down'
+            };
 
 let newFood = getRandomSpot();
 let dir;
@@ -31,8 +28,8 @@ let head;
                    --------Snake object and protos--------
                       -------------------------------*/
 
-function Snake() {
-  this.direction = 'right';
+function Snake(directions) {
+  this.direction = directions[randInt(0,3)];
   this.body = [];
   this.score;
 }
@@ -123,7 +120,7 @@ Snake.prototype.move = function(sq, food) {
   for (let j = 0; j < this.body.length; j++) {
     sq.draw(this.body[j][0],this.body[j][1]);
   }
-  sq.draw(food[0],food[1]);
+  sq.drawBlu(food[0],food[1]);
 }
 
 
@@ -168,9 +165,17 @@ function Square(context) {
 }
 
 
-//--------draw a Square---------------------------------------------------------
+//---------draw a Square--------------------------------------------------------
 Square.prototype.draw = function(x,y) {
   this.context.fillStyle = 'black';
+  this.context.lineWidth = 2;
+  this.context.strokeStyle = "white";
+  this.context.fillRect(x,y,10,10);
+  this.context.strokeRect(x, y, 10, 10);
+}
+//---------draw a blue square---------------------------------------------------
+Square.prototype.drawBlu = function(x,y) {
+  this.context.fillStyle = 'blue';
   this.context.lineWidth = 2;
   this.context.strokeStyle = "white";
   this.context.fillRect(x,y,10,10);
@@ -179,9 +184,9 @@ Square.prototype.draw = function(x,y) {
 
 
 
-                      /*-----------------
-                   --------Functions--------
-                      -----------------*/
+                            /*-----------------
+                         --------Functions--------
+                            -----------------*/
 
 //----------update Snake.direction on keydown-----------------------------------
 function getDirection(snake) {
@@ -217,8 +222,8 @@ function gameOver() {
 
 //----------return a random valid coordinate space-----------------------------
 function getRandomSpot() {
-  let rand1 = Math.floor(Math.random()*(490-20+1)+10);
-  let rand2 = Math.floor(Math.random()*(490-20+1)+10);
+  let rand1 = Math.floor(Math.random()*(490-0+1)+0);
+  let rand2 = Math.floor(Math.random()*(490-0+1)+0);
   let posX = Math.ceil((rand1+1) / 10) * 10;
   let posY = Math.ceil((rand2+1) / 10) * 10;
   return [posX,posY];
@@ -240,7 +245,9 @@ function game() {
   }, frameRate)
 }
 
-
+function randInt(min,max) {
+  return Math.floor(Math.random()*(max-min+1)+min);
+}
 
 //start a game
 game();
