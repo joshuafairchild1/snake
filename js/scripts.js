@@ -241,9 +241,9 @@ game();
 //------------------------------------------------------------------------------
 //----------OBJECTIVES----------------------------------------------------------
 //------------------------------------------------------------------------------
-// 1. count and display the score
 // 2. option to swap black and white (looks nice both ways)
 // 3. make it so you can't suicide the snake by arrowing too quick
 // 4. make it pretty
 // 5. make starting direction random
 // 6. make starting food random
+// 7. integrate hiscore

@@ -5,20 +5,37 @@
   margin-top: 30px;
 }
 
-#score-wrapper {
+#info {
   width: 506px;
   margin: auto;
-}
-
-#score {
-  height: 40px;
-  text-align: center;
+  height: 35px;
   border-left: solid 3px black;
   border-right: solid 3px black;
   border-bottom: solid 3px black;
-  width: 110px;
+}
+
+#hiscore-area, #color-area {
+  border-right: solid 3px black;
+}
+
+#hiscore-area, #score-area {
+  text-align: center;
   margin: auto;
-  /*margin-top: -40px;*/
-  float: right;
-  padding: 8px;
+  padding: 6px;
+}
+
+#color-area {
+  text-align: center;
+}
+
+#color-swap-btn {
+  height: 32px;
+}
+
+.col-sm-4 {
+  width: 33%;
+  height: 100%;
+}
+
+.info-col {
 }
