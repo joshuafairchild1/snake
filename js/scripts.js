@@ -21,7 +21,8 @@ const keys =
   39 : 'right',
   40 : 'down'
 };
-let newFood = [100,100];
+
+let newFood = getRandomSpot();
 let dir;
 let head;
 
@@ -131,18 +132,21 @@ Snake.prototype.lookForFood = function(sq, food) {
   head = [this.body[0][0],this.body[0][1]];
   if (head[0] === food[0] && head[1] === food[1]) {
     this.grow(sq, food);
+    console.log(newFood);
     newFood = spawnFood(sq);
 
     for (let i = 0; i < this.body.length; i++) {
       if (newFood[0] === this.body[i][0] && newFood[1] === this.body[i][1]) {
         // debugger;
         newFood = spawnFood(sq);
+        console.log(newFood);
       }
     }
   }
 }
 
 
+//----------update the score property of the snake------------------------------
 Snake.prototype.getScore = function() {
   let unformattedScore = this.body.length - 8;
   let str = "" + unformattedScore;
@@ -199,12 +203,9 @@ function getDirection(snake) {
 
 //----------draw a square at a random x,y pos-----------------------------------
 function spawnFood(sq) {
-  let randomSpot = Math.floor(Math.random()*(490-20+1)+10);
-  let posX = Math.ceil((randomSpot+1) / 10) * 10;
-  let posY = Math.ceil((randomSpot+1) / 10) * 10;
-  return [posX,posY];
-  sq.draw(posX,posY);
-  console.log([posX,posY]);
+  let randomSpot = getRandomSpot();
+  return randomSpot;
+  sq.draw(randomSpot[0],randomSpot[1]);
 }
 
 
@@ -214,10 +215,21 @@ function gameOver() {
 }
 
 
+//----------return a random valid coordinate space-----------------------------
+function getRandomSpot() {
+  let rand1 = Math.floor(Math.random()*(490-20+1)+10);
+  let rand2 = Math.floor(Math.random()*(490-20+1)+10);
+  let posX = Math.ceil((rand1+1) / 10) * 10;
+  let posY = Math.ceil((rand2+1) / 10) * 10;
+  return [posX,posY];
+}
+
+
 //----------fn to init and and begin looping the game---------------------------
 function game() {
   getDirection(snake);
   snake.init(square);
+
 
   setInterval(function() {
     snake.move(square, newFood);
@@ -230,7 +242,7 @@ function game() {
 
 
 
-
+//start a game
 game();
 
 
@@ -245,5 +257,4 @@ game();
 // 3. make it so you can't suicide the snake by arrowing too quick
 // 4. make it pretty
 // 5. make starting direction random
-// 6. make starting food random
 // 7. integrate hiscore
