@@ -21,8 +21,6 @@ const keys ={
 
 let newFood = getRandomSpot();
 let dir;
-let head;
-localStorage.hiscore;
 
 
                       /*-------------------------------
@@ -46,26 +44,26 @@ Snake.prototype.init = function(sq) {
 
 
 //----------add segment to end of body------------------------------------------
-Snake.prototype.grow = function(sq, food) {
+Snake.prototype.grow = function(sq) {
   let bod = this.body;
   let prevLastSquare = bod[bod.length - 2];
   let lastSquare = bod[bod.length - 1];
   let newSquare;
   dir = this.direction;
 
-  //mksqr to the left
+  //make new square to the left
   if (lastSquare[1] === prevLastSquare[1] && lastSquare[0] > prevLastSquare[0]) {
     newSquare = [lastSquare[0] - 10, lastSquare[1]];
 
-  //mksqr to the right
+  //make new square to the right
   } else if (lastSquare[1] === prevLastSquare[1] && lastSquare[0] < prevLastSquare[0]) {
     newSquare = [lastSquare[0] + 10, lastSquare[1]];
 
-  //mksqr going down
+  //make new square going down
   } else if (lastSquare[0] === prevLastSquare[0] && lastSquare[1] > prevLastSquare[1]) {
     newSquare = [lastSquare[0], lastSquare[1] + 10];
 
-  //mksqr going up
+  //make new square going up
   } else if (lastSquare[0] === prevLastSquare[0] && lastSquare[1] < prevLastSquare[1]) {
     newSquare = [lastSquare[0], lastSquare[1] - 10];
   }
@@ -74,7 +72,6 @@ Snake.prototype.grow = function(sq, food) {
   for(let i = 0; i < this.body.length; i++) {
     sq.draw(this.body[i][0],this.body[i][1]);
   }
-  sq.draw(food[0], food[1])
 }
 
 
@@ -86,24 +83,24 @@ Snake.prototype.move = function(sq, food) {
   //based on the direction, determine the coords of what the next spot is to be
   if (dir === 'right') {
     nextSpot = [(this.body[0][0])+10,this.body[0][1]];
+
   } else if (dir === 'left') {
     nextSpot = [(this.body[0][0])-10,this.body[0][1]];
+
   } else if (dir === 'up') {
     nextSpot = [this.body[0][0],(this.body[0][1]-10)];
+
   } else if (dir === 'down') {
     nextSpot = [this.body[0][0],(this.body[0][1]+10)];
   }
 
-  //kill the snake if necessary
   //check for contact with wall
   if (nextSpot[0] <= -10 || nextSpot[0] >= 500 || nextSpot[1] <= -10 || nextSpot[1] >= 500) {
-    // debugger;
     gameOver(this);
   }
   //check for contact with self
-  for (let k = 0; k < this.body.length; k++) {
-    if (nextSpot[0] === this.body[k][0] && nextSpot[1] === this.body[k][1]) {
-      // debugger;
+  for (let i = 0; i < this.body.length; i++) {
+    if (nextSpot[0] === this.body[i][0] && nextSpot[1] === this.body[i][1]) {
       gameOver(this);
     }
   }
@@ -116,28 +113,24 @@ Snake.prototype.move = function(sq, food) {
 
   //draw the new snake and the current food
   c.clearRect(0,0,h,w);
-  // c.fillStyle='black';    /* uncommenting these two lines looks pretty cool */
-  // c.fillRect(0,0,h,w);
-  for (let j = 0; j < this.body.length; j++) {
-    sq.draw(this.body[j][0],this.body[j][1]);
-  }
   sq.drawBlu(food[0],food[1]);
+  for (let i = 0; i < this.body.length; i++) {
+    sq.draw(this.body[i][0],this.body[i][1]);
+  }
 }
 
 
 //----------recognize & handle the snake eating food----------------------------
 Snake.prototype.lookForFood = function(sq, food) {
-  head = [this.body[0][0],this.body[0][1]];
+  let head = [this.body[0][0],this.body[0][1]];
   if (head[0] === food[0] && head[1] === food[1]) {
-    this.grow(sq, food);
-    console.log(newFood);
+    this.grow(sq);
     newFood = spawnFood(sq);
 
+    //keep food from spawning atop a snake square
     for (let i = 0; i < this.body.length; i++) {
       if (newFood[0] === this.body[i][0] && newFood[1] === this.body[i][1]) {
-        // debugger;
         newFood = spawnFood(sq);
-        console.log(newFood);
       }
     }
   }
@@ -168,8 +161,8 @@ function Square(context) {
 
 //---------draw a Square--------------------------------------------------------
 Square.prototype.draw = function(x,y) {
-  this.context.fillStyle = 'black';
   this.context.lineWidth = 2;
+  this.context.fillStyle = 'black';
   this.context.strokeStyle = "white";
   this.context.fillRect(x,y,10,10);
   this.context.strokeRect(x, y, 10, 10);
@@ -178,8 +171,8 @@ Square.prototype.draw = function(x,y) {
 
 //---------draw a blue square---------------------------------------------------
 Square.prototype.drawBlu = function(x,y) {
-  this.context.fillStyle = 'blue';
   this.context.lineWidth = 2;
+  this.context.fillStyle = 'blue';
   this.context.strokeStyle = "white";
   this.context.fillRect(x,y,10,10);
   this.context.strokeRect(x, y, 10, 10);
@@ -187,9 +180,9 @@ Square.prototype.drawBlu = function(x,y) {
 
 
 
-                            /*-----------------
-                         --------Functions--------
-                            -----------------*/
+                      /*-------------------------
+                    -------Declared functions-------
+                      -------------------------*/
 
 //----------update Snake.direction on keydown-----------------------------------
 function getDirection(snake) {
@@ -212,8 +205,8 @@ function getDirection(snake) {
 //----------draw a square at a random x,y pos-----------------------------------
 function spawnFood(sq) {
   let randomSpot = getRandomSpot();
-  return randomSpot;
   sq.draw(randomSpot[0],randomSpot[1]);
+  return randomSpot;
 }
 
 
@@ -247,20 +240,23 @@ function game() {
   getDirection(snake);
   snake.init(square);
   $('#hiscore-span').text(localStorage.hiscore);
-  console.log(localStorage.hiscore);
 
-  setInterval(function() {
-    snake.getScore();
-    $('#score-span').text(snake.score);
+  setInterval(() => {
     snake.move(square, newFood);
     snake.lookForFood(square, newFood);
+    snake.getScore();
+    $('#score-span').text(snake.score);
   }, frameRate)
 }
 
 
-//start a game
-game();
 
+
+//--------------------------START NEW GAME--------------------------------------
+
+/*--------------------*/       game();       /*-------------------------------*/
+
+//------------------------------------------------------------------------------
 
 
 
@@ -268,5 +264,4 @@ game();
 
 //------------------------------------------------------------------------------
 //----------OBJECTIVES----------------------------------------------------------
-//------------------------------------------------------------------------------
 // 3. make it so you can't suicide the snake by arrowing too quick
