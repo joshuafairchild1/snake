@@ -212,6 +212,9 @@ function spawnFood(sq) {
 
 //----------fn to call when the snake hits an invalid spot----------------------
 function gameOver(snake) {
+  if (localStorage.hiscore === undefined) {
+    localStorage.hiscore = 0;
+  }
   if (parseInt(snake.score) > parseInt(localStorage.hiscore)) {
     localStorage.hiscore = snake.score;
   }
