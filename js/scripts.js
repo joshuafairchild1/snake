@@ -19,10 +19,10 @@ const keys ={
               40 : 'down'
             };
 
-localStorage.hiscore;
 let newFood = getRandomSpot();
 let dir;
 let head;
+localStorage.hiscore;
 
 
                       /*-------------------------------
@@ -174,6 +174,8 @@ Square.prototype.draw = function(x,y) {
   this.context.fillRect(x,y,10,10);
   this.context.strokeRect(x, y, 10, 10);
 }
+
+
 //---------draw a blue square---------------------------------------------------
 Square.prototype.drawBlu = function(x,y) {
   this.context.fillStyle = 'blue';
@@ -267,8 +269,4 @@ game();
 //------------------------------------------------------------------------------
 //----------OBJECTIVES----------------------------------------------------------
 //------------------------------------------------------------------------------
-// 2. option to swap black and white (looks nice both ways)
 // 3. make it so you can't suicide the snake by arrowing too quick
-// 4. make it pretty
-// 5. make starting direction random
-// 7. integrate localStorage.hiscore

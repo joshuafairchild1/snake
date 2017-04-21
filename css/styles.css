@@ -1,41 +1,43 @@
 #snake-area {
-  border: solid 3px black;
+  border-top: solid 3px blue;
+  border-right: solid 3px blue;
+  border-left: solid 3px blue;
   margin: auto;
   display: block;
   margin-top: 30px;
+  background-color: black;
 }
 
 #info {
-  width: 506px;
+  width: 505.6px;
   margin: auto;
-  height: 35px;
-  border-left: solid 3px black;
-  border-right: solid 3px black;
-  border-bottom: solid 3px black;
+  height: 80px;
+  border: solid 3px blue;
+  margin-bottom: 40px;
 }
 
-#hiscore-area, #color-area {
-  border-right: solid 3px black;
+#hiscore-area, #img-area {
+  border-right: solid 3px blue;
 }
 
 #hiscore-area, #score-area {
   text-align: center;
-  margin: auto;
-  padding: 6px;
 }
 
-#color-area {
-  text-align: center;
-}
-
-#color-swap-btn {
-  height: 32px;
-}
-
-.col-sm-4 {
-  /*width: 33%;*/
+#ouro {
   height: 100%;
+  width: 100%;
+  padding-top: 3px;
+}
+
+#score, #hiscore {
+  margin-bottom: 0px;
+  font-size: 20px;
 }
 
 .info-col {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
