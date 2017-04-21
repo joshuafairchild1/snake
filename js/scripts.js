@@ -3,7 +3,7 @@ const c = canvas.getContext('2d');
 const h = canvas.height;
 const w = canvas.width;
 const frameRate = 85;
-const directions = ['right','left','up','down'];
+const directions = ['right','up','down'];
 const snake = new Snake(directions);
 const square = new Square(c);
 const opposites = {
@@ -19,6 +19,7 @@ const keys ={
               40 : 'down'
             };
 
+localStorage.hiscore;
 let newFood = getRandomSpot();
 let dir;
 let head;
@@ -29,7 +30,7 @@ let head;
                       -------------------------------*/
 
 function Snake(directions) {
-  this.direction = directions[randInt(0,3)];
+  this.direction = directions[randInt(0,2)];
   this.body = [];
   this.score;
 }
@@ -97,13 +98,13 @@ Snake.prototype.move = function(sq, food) {
   //check for contact with wall
   if (nextSpot[0] <= -10 || nextSpot[0] >= 500 || nextSpot[1] <= -10 || nextSpot[1] >= 500) {
     // debugger;
-    gameOver();
+    gameOver(this);
   }
   //check for contact with self
   for (let k = 0; k < this.body.length; k++) {
     if (nextSpot[0] === this.body[k][0] && nextSpot[1] === this.body[k][1]) {
       // debugger;
-      gameOver();
+      gameOver(this);
     }
   }
 
@@ -215,18 +216,27 @@ function spawnFood(sq) {
 
 
 //----------fn to call when the snake hits an invalid spot----------------------
-function gameOver() {
+function gameOver(snake) {
+  if (parseInt(snake.score) > parseInt(localStorage.hiscore)) {
+    localStorage.hiscore = snake.score;
+  }
   location.reload();
 }
 
 
-//----------return a random valid coordinate space-----------------------------
+//----------return a random valid coordinate space------------------------------
 function getRandomSpot() {
-  let rand1 = Math.floor(Math.random()*(490-0+1)+0);
-  let rand2 = Math.floor(Math.random()*(490-0+1)+0);
+  let rand1 = Math.floor(Math.random()*(485-0+1)+0);
+  let rand2 = Math.floor(Math.random()*(485-0+1)+0);
   let posX = Math.ceil((rand1+1) / 10) * 10;
   let posY = Math.ceil((rand2+1) / 10) * 10;
   return [posX,posY];
+}
+
+
+//----------return random int from min to max (including min and max)-----------
+function randInt(min,max) {
+  return Math.floor(Math.random()*(max-min+1)+min);
 }
 
 
@@ -234,20 +244,17 @@ function getRandomSpot() {
 function game() {
   getDirection(snake);
   snake.init(square);
-
+  $('#hiscore-span').text(localStorage.hiscore);
+  console.log(localStorage.hiscore);
 
   setInterval(function() {
-    snake.move(square, newFood);
-    snake.lookForFood(square, newFood);
     snake.getScore();
     $('#score-span').text(snake.score);
-    // debugger;
+    snake.move(square, newFood);
+    snake.lookForFood(square, newFood);
   }, frameRate)
 }
 
-function randInt(min,max) {
-  return Math.floor(Math.random()*(max-min+1)+min);
-}
 
 //start a game
 game();
@@ -264,4 +271,4 @@ game();
 // 3. make it so you can't suicide the snake by arrowing too quick
 // 4. make it pretty
 // 5. make starting direction random
-// 7. integrate hiscore
+// 7. integrate localStorage.hiscore
