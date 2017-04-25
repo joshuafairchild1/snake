@@ -2,7 +2,7 @@ const canvas = document.getElementById('snake-area');
 const c = canvas.getContext('2d');
 const h = canvas.height;
 const w = canvas.width;
-const frameRate = 85;
+const frameRate = 55;
 const directions = ['right','up','down'];
 const snake = new Snake(directions);
 const square = new Square(c);
@@ -181,7 +181,7 @@ Square.prototype.drawBlu = function(x,y) {
 
 
                       /*-------------------------
-                    -------Declared functions-------
+                    -------Named functions-------
                       -------------------------*/
 
 //----------update Snake.direction on keydown-----------------------------------
@@ -260,11 +260,3 @@ function game() {
 /*--------------------*/       game();       /*-------------------------------*/
 
 //------------------------------------------------------------------------------
-
-
-
-
-
-//------------------------------------------------------------------------------
-//----------OBJECTIVES----------------------------------------------------------
-// 3. make it so you can't suicide the snake by arrowing too quick

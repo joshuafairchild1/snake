@@ -1,4 +1,4 @@
-# ***Snake***
+# ***Snake!***
 
 *JavaScript exercise, April 2017*
 
@@ -7,14 +7,16 @@
 ---
 
 ## Description
-This is a game. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+This is game "snake", recreated using HTML, CSS and JavaScript. I created this project to practice using JavaScript to interact wth the HTML canvas element, and to practice using object oriented techniques when working with the canvas element.
+
+![Browser-based "snake" game](./img/screencap.png)
 
 ---
 
 #### Basic Specifications
 | Behavior | Example Input | Example Output |
 |----------|---------------|----------------|
-| Snake moves independently | *user loads the game* | *snake moves 10px in the current direction (every 85 ms)* |
+| Snake moves independently | *user loads the game* | *snake moves 10px in the current direction (every 55 ms)* |
 | "Foodsquare" spawns randomly | *user loads the game / snake consumes a foodsquare* | *new foodsquare spawns at a random location* |
 | Snake can change direction | *user presses an arrow key* | *snake begins moving in the specified direction* |
 | Snake grows in size | *user moves the "head" of the snake over a foodsquare* | *foodsquare disappears, snake grows by one unit* |
@@ -33,10 +35,12 @@ This is a game. Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
 
 * The webpage can also be viewed [here](https://joshuafairchild1.github.io/snake/)
 
+* **A keyboard with functional left/right/up/down arrow keys is required to play the game**
+
 
 #### Known Bugs/Issues
-If the user tries to change the direction of the snake 2 (or more) times in <85 ms, the game resets.
-* Example: snake is moving right, user keys up, then right again (in <85 ms). The game will then reload as if the snake hit itself/wall.
+If the user tries to change the direction of the snake 2 (or more) times in <55 ms, the game resets.
+* Example: snake is moving right, user keys up, then right again (in <55 ms). The game will then reload as if the snake hit itself/wall.
 
 
 #### Technologies Used
