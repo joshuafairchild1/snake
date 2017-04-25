@@ -9,7 +9,9 @@
 ## Description
 This is game "snake", recreated using HTML, CSS and JavaScript. I created this project to practice using JavaScript to interact wth the HTML canvas element, and to practice using object oriented techniques when working with the canvas element.
 
-![Browser-based "snake" game](./img/screencap.png)
+<p align='center'>
+<img src='./img/screencap.png' alt='Browser-based snake game' height='400px' width='400px'>
+</p>
 
 ---
 
