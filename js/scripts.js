@@ -92,6 +92,7 @@ Snake.prototype.move = function(sq, food) {
   //check for contact with self
   for (let i = 0; i < this.body.length; i++) {
     if (nextSpot[0] === this.body[i][0] && nextSpot[1] === this.body[i][1]) {
+      debugger;
       gameOver(this);
     }
   }
@@ -177,16 +178,25 @@ Square.prototype.drawBlu = function(x,y) {
 
 //----------update Snake.direction on keydown-----------------------------------
 function getDirection(snake) {
+
+  let lastKeyDown = 0;
+
   window.addEventListener('keydown', e => {
     let lastDir = snake.direction;
     let clickedKey = e.keyCode;
     let isArrowKey = Object.keys(keys).includes(String(clickedKey));
+    let now = new Date();
 
     if (isArrowKey) {
       e.preventDefault();
-      let keyDirection = keys[clickedKey];
-      if (keyDirection !== opposites[lastDir]) {
-        snake.direction = keyDirection;
+
+      if (now - lastKeyDown > 55) {
+        lastKeyDown = now;
+        let keyDirection = keys[clickedKey];
+
+        if (keyDirection !== opposites[lastDir]) {
+          snake.direction = keyDirection;
+        }
       }
     }
   });
@@ -231,10 +241,10 @@ function randInt(min,max) {
 
 //----------fn to init and and begin looping the game---------------------------
 function game() {
-  getDirection(snake);
   $('#hiscore-span').text(localStorage.hiscore);
 
   setInterval(() => {
+    getDirection(snake);
     snake.move(square, newFood);
     snake.lookForFood(square, newFood);
     snake.getScore();
