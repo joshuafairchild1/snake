@@ -190,7 +190,7 @@ function getDirection(snake) {
     if (isArrowKey) {
       e.preventDefault();
 
-      if (now - lastKeyDown > 55) {
+      if (now - lastKeyDown > frameRate) {
         lastKeyDown = now;
         let keyDirection = keys[clickedKey];
 
@@ -242,9 +242,9 @@ function randInt(min,max) {
 //----------fn to init and and begin looping the game---------------------------
 function game() {
   $('#hiscore-span').text(localStorage.hiscore);
+  getDirection(snake);
 
   setInterval(() => {
-    getDirection(snake);
     snake.move(square, newFood);
     snake.lookForFood(square, newFood);
     snake.getScore();

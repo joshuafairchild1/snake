@@ -41,8 +41,7 @@ This is game "snake", recreated using HTML, CSS and JavaScript. I created this p
 
 
 #### Known Bugs/Issues
-If the user tries to change the direction of the snake 2 (or more) times in <55 ms, the game resets.
-* Example: snake is moving right, user keys up, then right again (in <55 ms). The game will then reload as if the snake hit itself/wall.
+* None currently
 
 
 #### Technologies Used
