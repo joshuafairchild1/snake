@@ -29,17 +29,8 @@ let dir;
 
 function Snake(directions) {
   this.direction = directions[randInt(0,2)];
-  this.body = [];
+  this.body = [[240,240],[230,240],[220,240],[210,240],[200,240],[190,240],[180,240],[170,240]];
   this.score;
-}
-
-
-//----------add 8 segments to the body------------------------------------------
-Snake.prototype.init = function(sq) {
-  for (let i = 0; i < 8; i++) {
-    sq.draw(240 - (10*i), 240);
-    this.body.push([240 - (10*i), 240]);
-  }
 }
 
 
@@ -241,7 +232,6 @@ function randInt(min,max) {
 //----------fn to init and and begin looping the game---------------------------
 function game() {
   getDirection(snake);
-  snake.init(square);
   $('#hiscore-span').text(localStorage.hiscore);
 
   setInterval(() => {
