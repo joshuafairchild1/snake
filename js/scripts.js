@@ -225,8 +225,8 @@ function gameOver(snake) {
 
 //----------return a random valid coordinate space------------------------------
 function getRandomSpot() {
-  let rand1 = Math.floor(Math.random()*(485-0+1)+0);
-  let rand2 = Math.floor(Math.random()*(485-0+1)+0);
+  let rand1 = randInt(0,485);
+  let rand2 = randInt(0,485);
   let posX = Math.ceil((rand1+1) / 10) * 10;
   let posY = Math.ceil((rand2+1) / 10) * 10;
   return [posX,posY];
